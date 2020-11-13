@@ -1,9 +1,15 @@
 import logo from "./logo.svg";
 import React from "react";
-import Contact from "./contact";
-import "./App.css";
+import { withRouter, Switch, Route } from "react-router-dom";
 
-export default class App extends React.Component {
+import Contact from "./components/contact";
+import "./App.css";
+import AddFormPage from "./pages/addFormPage";
+import ContactListPage from "./pages/contactListPage";
+import HomePage from "./pages/homePage";
+import Header from "./components/header";
+
+class App extends React.Component {
   state = {
     contacts: [],
   };
@@ -86,21 +92,41 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <ul>
-          {this.state.contacts.map((contact) => (
-            <Contact
-              contact={contact}
-              deleteContact={this.deleteContact}
-              updateContact={this.updateContact}
-            />
-          ))}
-        </ul>
-        <form onSubmit={this.createContact}>
-          <input type="text" name="name" placeholder="insert name" />
-          <input type="email" name="email" placeholder="insert email" />
-          <input type="submit" value="Submit" />
-        </form>
+        <>
+          <Header />
+          <img src="http://localhost:8000/images/CL_visual_Codi_website.png" />
+          {
+            <Switch>
+              <Route
+                path="/"
+                exact
+                render={(props) => <HomePage props={props} />}
+              ></Route>
+              <Route
+                path="/addcontact"
+                render={(props) => (
+                  <AddFormPage
+                    props={props}
+                    createContact={this.createContact}
+                  />
+                )}
+              ></Route>
+              <Route
+                path="/mycontacts"
+                render={(props) => (
+                  <ContactListPage
+                    props={props}
+                    contacts={this.state.contacts}
+                    deleteContact={this.deleteContact}
+                    updateContact={this.updateContact}
+                  />
+                )}
+              ></Route>
+            </Switch>
+          }
+        </>
       </div>
     );
   }
 }
+export default withRouter(App);
