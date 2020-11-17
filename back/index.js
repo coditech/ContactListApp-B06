@@ -1,5 +1,18 @@
 import app from "./app";
 import initializeDatabase from "./controller";
+import multer from "multer";
+const multerStorage = multer.diskStorage({
+  destination: "public/images",
+  filename: (req, file, cb) => {
+    const { fieldname, originalname } = file;
+    const date = Date.now();
+    // filename will be: image-1345923023436343-filename.png
+    const filename = `${fieldname}-${date}-${originalname}`;
+    cb(null, filename);
+  },
+});
+
+const upload = multer({ storage: multerStorage });
 //db.test();
 const start = async () => {
   const controller = await initializeDatabase();
@@ -19,13 +32,15 @@ const start = async () => {
       contact,
     });
   });
-  app.get("/addcontact", async (req, res) => {
+  app.post("/addcontact", upload.single("image"), async (req, res) => {
     const { name, email } = req.query;
+    const image = req.file && req.file.filename;
     console.log(name, email);
-    const result = await controller.createContact(name, email);
+    const result = await controller.createContact(name, email, image);
     res.send({
       success: true,
       result,
+      image,
     });
   });
   app.get("/deletecontact/:id", async (req, res) => {

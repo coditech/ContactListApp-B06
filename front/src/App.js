@@ -25,15 +25,19 @@ class App extends React.Component {
     e.preventDefault();
     const name = e.target.name.value;
     const email = e.target.email.value;
-    console.log(name, email);
+    const file = e.target.image.files[0];
+    console.log(name, email, file);
+    const body = new FormData();
+    body.append("image", file);
+
     const url = `http://localhost:8000/addcontact?name=${name}&email=${email}`;
     console.log(url);
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { method: "POST", body });
       const result = await response.json();
       console.log(result);
       const contacts = [...this.state.contacts];
-      contacts.push({ id: result.result, name, email });
+      contacts.push({ id: result.result, name, email, image: result.image });
       this.setState({ contacts });
     } catch (e) {
       console.log(e);
@@ -94,7 +98,6 @@ class App extends React.Component {
       <div className="App">
         <>
           <Header />
-          <img src="http://localhost:8000/images/CL_visual_Codi_website.png" />
           {
             <Switch>
               <Route

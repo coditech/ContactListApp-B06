@@ -40,6 +40,10 @@ export default class Contact extends Component {
       </form>
     ) : (
       <li>
+        <img
+          height="50px"
+          src={`http://localhost:8000/images/${this.props.contact.image}`}
+        />
         {this.props.contact.name} - {this.props.contact.email}
         <button
           onClick={() => {

@@ -10,19 +10,19 @@ const initializeDatabase = async () => {
   });
   const getContactsList = async () => {
     const rows = await db.all(
-      "SELECT contact_id AS id, name, email FROM contacts"
+      "SELECT contact_id AS id, name, email, image FROM contacts"
     );
     return rows;
   };
   const getContactByID = async (id) => {
     const rows = await db.all(
-      `SELECT contact_id AS id, name, email FROM contacts where contact_id=${id}`
+      `SELECT contact_id AS id, name, email, image FROM contacts where contact_id=${id}`
     );
     return rows;
   };
-  const createContact = async (name, email) => {
+  const createContact = async (name, email, image) => {
     console.log(name, email);
-    const query = `Insert into contacts (name, email) values ("${name}"," ${email}")`;
+    const query = `Insert into contacts (name, email, image) values ("${name}"," ${email}", "${image}")`;
     try {
       const result = await db.run(query);
       console.log(result);
